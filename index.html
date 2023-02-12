@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Lecture 7</title>
+		<title>Lecture 8</title>
 
 		<link rel="shortcut icon" type="image/x-icon" href="uu_logo/UU_logo_color-cropped.ico">
 
@@ -25,22 +25,643 @@
 
 <!-- BEGIN SLIDES -->
 <section data-background-image="images/background.jpg" data-background-opacity="0.2">
-	<h1>Lecture 7</h1>
+	<h1>Lecture 8</h1>
 	<p>Nikolaus Huber</p>
 </section>
 
-<section data-background-image="images/optimization.jpg" data-background-opacity="0.12">
-	<h1>Optimization</h1>
+<section data-background-image="images/testing.jpg" data-background-opacity="0.2">
+	<h1>Testing</h1>
 </section>
 
 <section>
 	<h3>Outline</h3>
 	<ul>
-		<li>Recap on Complexity</li>
-		<li>Space-Time spectrum</li>
-		<li>Measuring & Profiling</li>
-		<li>Low-level optimization</li>
+		<li>Background</li>
+		<li>Categories of testing</li>
+		<li>Unit Testing</li>
+		<li>Coverage</li>
+		<li>System-level testing</li>
 	</ul>
+</section>
+
+<section>
+	<h3>V&V Categories</h3>
+	<ul>
+		<li>Testing is the most common approach to V&V</li>
+		<li>Testing is a form of <emph>dynamic V&V</emph></li>
+		<li>Aother alternatives exist</li>
+		<ul>
+			<li><emph>Static V&V</emph> (next lecture)</li>
+			<li>Code inspection and reviews</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Background</h3>
+	<ul>
+		<li>Testing ideas/techniques are essential knowledge for all software developers</li>
+		<li>Many projects spend more time on testing than implementation</li>
+		<li>Testing is the primary method in industry to evaluate software</li>
+		<li>Huge body of knowledge</li>
+		<ul>
+			<li>Many different approaches (opinions)</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>General setup</h3>
+	<ul>
+		<li>Usual test procedure:</li>
+		<ul>
+			<li>Define inputs to test</li>
+			<li>Run test</li>
+			<li>Analyse result</li>
+		</ul>
+		<li>Usually performed by <emph>test engineer</emph></li>
+		<li>Lots of potential for automation</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Levels of testing</h3>
+	<ul>
+		<li>Unit testing</li>
+		<li>Integration testing</li>
+		<li>System testing</li>
+		<li>Acceptance testing</li>
+		<li>Orthogonal: Regression testing</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Unit testing</h3>
+	<ul>
+		<li>Test individual <emph>software units</emph> (functions, classes, tasks, ...)</li>
+		<li>Evaluated with respect to <emph>low-level unit design</emph></li>
+		<li>Should be done as early as possible</li>
+		<li>Sometimes even before implementation => <emph>test-driven development</emph></li>
+		<li>Run each time a unit is modified</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Integration testing</h3>
+	<ul>
+		<li>Test software w.r.t. <emph>architectural design</emph></li>
+		<li>Focus on integration/interaction between different modules/units</li>
+		<li>Normally done after unit testing</li>
+	</ul>
+</section>
+
+<section>
+	<h3>System testing</h3>
+	<ul>
+		<li>Assess software w.r.t. <emph>system-level specification</emph></li>
+		<li>Sometimes by observing externally visible behaviour</li>
+		<li>Usually quite late during development</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Acceptance testing</h3>
+
+	<ul>
+		<li>Test software w.r.t. <emph>user requirements</emph></li>
+		<li>Usually done by both the system provider and by customer</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Unit testing</h1>
+</section>
+
+<section>
+	<h3>Usual setup</h3>
+	<ol>
+		<li>Prepare: Intialize inputs</li>
+		<li>Test: Run implementation under test (IUT)</li>
+		<li>Analyse: Decision (oracle) wether test was successful</li>
+	</ol>
+</section>
+
+<section>
+	<h3>Test sets and test suites</h3>
+	<ul>
+		<li><emph>Test set</emph> is a collection of test cases for a particular unit</li>
+		<li><emph>Test suite</emph> is a collection of test sets (usually for a number of units)</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Example</h3>
+	<pre class="C"><code data-trim data-noescape data-line-numbers="|2|5,6,15|8|11|14|">
+		/* Unit to test */
+		extern void sort(int * arr, int len); 
+
+		/* Test case */
+		bool testSort(void) 
+		{
+			/* Initialization */
+			int a[] = { 3, -1, 5 }; 	
+
+			/* IUT invocation */
+			sort(a,3); 		
+
+			/* Oracle */
+			return (a[0] <= a[1] && a[1] <= a[2]); 		
+		}
+	</code></pre>
+</section>
+
+<section>
+	<h3>Contracts => Units</h3>
+	<pre class="C"><code data-trim data-noescape data-line-numbers="|1-5|10,11|15,16|">
+		/* 
+		 * PRE: len(arr) == len
+		 * POST: arr is sorted
+		 */
+		extern void sort(int * arr, int len); 
+
+		/* Test case */
+		bool testSort(void) 
+		{
+			/* Initialization => ensure preconditions */
+			int a[] = { 3, -1, 5 }; 	
+
+			sort(a,3); 		
+
+			/* Oracle => verify postconditions */
+			return (a[0] <= a[1] && a[1] <= a[2]); 		
+		}
+	</code></pre>
+</section>
+
+<section>
+	<h3>Oracles</h3>
+	<ul>
+		<li>Often independent of particular test case</li>
+		<li>Sometimes derivable (mechanically) from unit specifiction</li>
+		<li>Oracle is essential for automation</li>
+		<li>In practice:</li>
+		<ul>
+			<li>Oracle just compares unit outputs with desired (expected) outputs</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Automation</h3>
+	<ul>
+		<li>By using a tool we can run large collection of tests automatically</li>
+		<li>Testing code sometimes integrated into actual code (documentation)</li>
+		<li>Whenever we extend code we can rerun test suite (=> regression testing)</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Test construction and coverage criteria</h1>
+</section>
+
+<section>
+	<h3>Construction of test suites</h3>
+	<ul>
+		<li><emph>Black box</emph> (Closed box) testing</li>
+		<ul>
+			<li>Derive tests from external descriptions</li>
+			<li>Without knowledge of concrete implementation</li>
+			<li>Specifications, requirements, signatures, ...</li>
+		</ul>
+		<li><emph>White box</emph> (Glass box) testing</li>
+		<ul>
+			<li>Derive tests from source code</li>
+			<li>Branches, conditions, statements, ...</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Coverage</h3>
+	<ul>
+		<li>Usually derive test suite to achieve certain notion of <emph>coverage</emph></li>
+		<li>Input space coverage</li>
+		<li>Control-flow graph coverage</li>
+		<li>Logic coverage</li>
+		<li>Mutation coverage</li>
+		<li>Sometimes required by standard</li>
+		<li>E.g. DO-178C (avionics) requires some level of MC/DC coverage for level A certification</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Input domain modelling</h3>
+	<ul>
+		<li>Usually achieve coverage by testing different inputs</li>
+		<li><emph>Input domain</emph> is the set of all possible inputs to a program</li>
+		<li>Usually large or even infinite</li>
+		<li>Goal is to choose finitely many inputs that still represent complete input domain</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Input space partitioning</h3>
+	<ul>
+		<li>Partition input domain into <emph>regions</emph></li>
+		<li>Equivalence classes of values in domain w.r.t. some characteristic</li>
+		<li>Example integer inputs</li>
+		<ul>
+			<li>Negative</li>
+			<li>Positive</li>
+			<li>Zero</li>
+		</ul>
+		<li><emph>Coverage criterion</emph>: has each region been covered by test cases?</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Structural coverage</h1>
+</section>
+
+<section>
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		
+		<pre class="C"><code data-trim data-noescape data-line-numbers="">
+			int f(int a, int b) {
+				int z = 0;
+				while(a != 0) {
+					if(a % 2 != 0) {
+						z = z + b;
+					}
+					a = a / 2;
+					b = b * 2;
+				}
+				return z; 
+			}
+		</code></pre>
+		
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="2">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg1.drawio.svg">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="3">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg2.drawio.svg">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="4">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg3.drawio.svg">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="10">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg4.drawio.svg">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="5">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg5.drawio.svg">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="7">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg6.drawio.svg">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="8">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg7.drawio.svg">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="3">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg8.drawio.svg">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Control-flow graph (CFG)</h3>
+		<div style="display: flex; align-items: center;">
+			<div class="half-part">
+			<pre class="C"><code data-trim data-noescape data-line-numbers="10|">
+				int f(int a, int b) {
+					int z = 0;
+					while(a != 0) {
+						if(a % 2 != 0) {
+							z = z + b;
+						}
+						a = a / 2;
+						b = b * 2;
+					}
+					return z; 
+				}
+			</code></pre>
+			</div>
+			<div class="half-part">
+				<img class="r-stretch" src="images/cfg9.drawio.svg">
+			</div>
+		</div>
+	</section>
+</section>
+
+<section>
+	<h3>Common notion in CFGs</h3>
+	<ul>
+		<li><emph>Execution path</emph></li>
+		<ul>
+			<li>Path through CFG that starts at entry point</li>
+			<li>Either at (one of) the exit point(s)</li>
+			<li>Or is infinite</li>
+		</ul>
+		<li><emph>Path condition</emph></li>
+		<ul>
+			<li>Condition for an execution path p within code c such that c executes p if path condition holds</li>
+		</ul>
+		<li><emph>Feasible execution path</emph></li>
+		<ul>
+			<li>Execution path for which a satisfiable path condition exists</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Statement coverage</h3>
+	<ul>
+		<li>A test suite achieves <emph>statement coverage</emph> if throughout the execution of all tests every node in the CFG is executed at least once</li>
+		<li>Often quantified: e.g. 80% statement coverage</li>
+		<li>Can this always be achieved?</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Counter example</h3>
+	<pre class="C"><code data-trim data-noescape data-line-numbers="|7|">
+		int x;
+		if (x > 0)
+		{
+			int y = x;
+			if (y < 0) 
+			{
+				printf("%d\n", y); 
+			}
+		}
+	</code></pre>
+</section>
+
+<section>
+	<h3>Branch coverage</h3>
+
+	<ul>
+		<li>A test suite achieves <emph>branch coverage</emph> if throughout the execution of all tests every edge in the CFG is taken at least once</li>
+		<li>Branch coverage subsumes statement coverage</li>
+		<ul>
+			<li>If a test suite achieves BC it automatically also achieves SC</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Path coverage</h3>
+	<ul>
+		<li>A test suite achieves <emph>path coverage</emph> if throughout the execution of all tests each possible path in the CFG is executed at least once</li>
+		<li>Path coverage subsumes branch coverage</li>
+		<li>Path coverage cannot be achieved in practice</li>
+		<ul>
+			<li>Number of paths is too large</li>
+			<li>E.g. in our example we have $\approx 2^{31}$ feasible paths</li>
+			<li>Paths might be infeasible</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Decision coverage</h3>
+	<ul>
+		<li><emph>Decision</emph> $D(p)$ in a program p</li>
+		<ul>
+			<li>Set of <emph>maximum</emph> boolean expressions in p</li>
+		</ul>
+		<li>E.g. conditions of if, while, for, ...</li>
+		<li>But also statements like A = (B && (x >= 0))</li>
+		<li>Maximum in the sense that (B && (x >= 0)) is a decision, B and (x >= 0) are not</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Decision coverage</h3>
+	<ul>
+		<li>Multiple occurances of the same expression are counted as different decisions</li>
+	</ul>
+	<pre class="C"><code data-trim data-noescape data-line-numbers="|7|">
+		if (x >= 0) { /* ... */ }
+
+		/* ... */ 
+
+		if (x >= 0) { /* ... */ }
+	</code></pre>
+</section>
+
+<section>
+	<h3>Decision coverage</h3>
+	<ul>
+		<li>For a given decision $d$ <emph>decision coverage</emph> is satisfied if it contains at least one test where d evaluates to true and one where d evaluates to false</li>
+		<li>A test suite achieves decision coverage for a program $p$ if it achieves decision coverage for every decision $d$ in $D(p)$</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Example - decision coverage</h3>
+	<ul>
+		<li>int a, b, m, n, o</li>
+		<li>bool D</li>
+		<li> $((a < b) \lor D) \land (m >= n * o)$ </li>
+		<li>Inputs to achieve DC?</li>
+		<li>Need 2 tests:</li>
+		<ul>
+			<li>(a = 5, b = 10, D = true, m = 1, n = 1, o = 1)</li>
+			<li>(a = 10, b = 5, D = false, m = 1, n = 1, o = 1)</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Condition coverage</h3>
+	<ul>
+		<li><emph>Conditions</emph> $C(p)$ of a program $p$ are the set of atomic boolean expressions in $p$</li>
+		<li>E.g. in the decision $((a < b) \lor D) \land (m >= n * o)$ the conditions are $(a < b)$, $D$, and $(m >= n * o)$</li>
+		<li>A test suite achieves <emph>condition coverage</emph> if each condition $c$ in program $p$ evaluates at least once to true and once to false</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Modified condition decision coverage (MC/DC)</h3>
+	<ul>
+		<li>For a given condition $c$ in decision $d$, MC/DC is satisfied by a test suite if it contains one test where $c$ evaluates to false, one where it evaluates to true, $d$ evaluates differently
+			if both cases, and all other conditions in $d$ evaluate identically in both.
+		</li>
+		<li>For a given program $p$, MC/DC is satisfied by a test suite if it satisfies MC/DC for all $c$ in $C(p)$</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Regression testing</h3>
+	
 </section>
 
 <section>
