@@ -63,10 +63,13 @@
 		<li class="fragment fade-up">Testing ideas/techniques are essential knowledge for all software developers</li>
 		<li class="fragment fade-up">Many projects spend more time on testing than implementation</li>
 		<li class="fragment fade-up">Testing is the primary method in industry to evaluate software</li>
-		<li class="fragment fade-up">Huge body of knowledge</li>
-		<ul>
-			<li class="fragment fade-up">Many different approaches (opinions)</li>
-		</ul>
+		<li class="fragment fade-up">Huge body of knowledge
+			<ul>
+				<li>Many different approaches (how to construct/evaluate tests, etc.)</li>
+				<li>=> we focus on the most important/common directions</li>
+			</ul>
+		</li>
+		
 	</ul>
 </section>
 
@@ -75,7 +78,7 @@
 	<ul>
 		<li class="fragment fade-up">Usual test procedure:</li>
 		<ul>
-			<li class="fragment fade-up">Define inputs to test</li>
+			<li class="fragment fade-up">Define inputs to test</li> 
 			<li class="fragment fade-up">Run test</li>
 			<li class="fragment fade-up">Analyse result</li>
 		</ul>
@@ -99,10 +102,14 @@
 	<h3>Unit testing</h3>
 	<ul>
 		<li class="fragment fade-up">Test individual <emph>software units</emph> (functions, classes, tasks, ...)</li>
-		<li class="fragment fade-up">Evaluated with respect to <emph>low-level unit design</emph></li>
-		<li class="fragment fade-up">Should be done as early as possible</li>
+		<li class="fragment fade-up">Evaluated with respect to <emph>low-level unit design</emph>
+			<ul>
+				<li>e.g., contracts formulated for individual functions </li>
+			</ul>
+		</li>
+		<li class="fragment fade-up">Should be done as early as possible
 		<li class="fragment fade-up">Sometimes even before implementation => <emph>test-driven development</emph></li>
-		<li class="fragment fade-up">Run each time a unit is modified</li>
+		<li class="fragment fade-up">Run each time a unit is modified (as part of regression testing)</li>
 	</ul>
 </section>
 
@@ -111,15 +118,24 @@
 	<ul>
 		<li class="fragment fade-up">Test software w.r.t. <emph>architectural design</emph></li>
 		<li class="fragment fade-up">Focus on integration/interaction between different modules/units</li>
-		<li class="fragment fade-up">Normally done after unit testing</li>
+		<li class="fragment fade-up">Normally done after unit testing</li> 
+		<li class="fragment fade-up">E.g., <emph>bottom-up</emph> : gradually put units together 
+			and consider progressively larger part of system</li> 
 	</ul>
 </section>
 
 <section>
 	<h3>System testing</h3>
 	<ul>
-		<li class="fragment fade-up">Assess software w.r.t. <emph>system-level specification</emph></li>
-		<li class="fragment fade-up">Sometimes by observing externally visible behaviour</li>
+		<li class="fragment fade-up">Assess software w.r.t. <emph>system-level specification</emph>
+			<ul>
+				<li>E.g., Overall requirements</li>
+			</ul>
+		</li>
+		<li class="fragment fade-up">Test only externally visible behavior (no internals)
+			<ul><emph>Black-box</emph> approach
+			</ul>
+		</li>
 		<li class="fragment fade-up">Usually quite late during development</li>
 	</ul>
 </section>
@@ -168,14 +184,14 @@
 			/* IUT invocation */
 			sort(a,3); 		
 
-			/* Oracle */
+			/* Oracle, return true if test passed */
 			return (a[0] <= a[1] && a[1] <= a[2]); 		
 		}
 	</code></pre>
 </section>
 
 <section>
-	<h3>Contracts => Units</h3>
+	<h3>From contracts to units</h3>
 	<pre class="C"><code data-trim data-noescape data-line-numbers="|1-5|10,11|15,16|">
 		/* 
 		 * PRE: len(arr) == len
@@ -211,13 +227,15 @@
 </section>
 
 <section>
-	<h3>Automation</h3>
+	<h3>Test automation</h3>
 	<ul>
 		<li class="fragment fade-up">By using a tool we can run large collection of tests automatically</li>
 		<li class="fragment fade-up">Testing code sometimes integrated into actual code (documentation)</li>
 		<li class="fragment fade-up">Whenever we extend code we can rerun test suite (=> regression testing)</li>
 	</ul>
 </section>
+
+<!-- Exercise: improve oracle by making it more general or more thorough -->
 
 <section data-background-image="images/crane.jpg" data-background-opacity="0.2">
 	<h2>Test construction and coverage criteria</h2>
@@ -226,17 +244,19 @@
 <section>
 	<h3>Construction of test suites</h3>
 	<ul>
-		<li class="fragment fade-up"><emph>Black box</emph> (Closed box) testing</li>
-		<ul>
-			<li class="fragment fade-up">Derive tests from external descriptions</li>
-			<li class="fragment fade-up">Without knowledge of concrete implementation</li>
-			<li class="fragment fade-up">Specifications, requirements, signatures, ...</li>
-		</ul>
-		<li class="fragment fade-up"><emph>White box</emph> (Glass box) testing</li>
-		<ul>
-			<li class="fragment fade-up">Derive tests from source code</li>
-			<li class="fragment fade-up">Branches, conditions, statements, ...</li>
-		</ul>
+		<li class="fragment fade-up"><emph>Black box</emph> (specification-based) testing
+			<ul>
+				<li>Derive tests from external descriptions</li>
+				<li>Without knowledge of concrete implementation</li>
+				<li>Specifications, requirements, signatures, ...</li>
+			</ul>
+		</li>
+		<li class="fragment fade-up"><emph>White box</emph> (implementation-based) testing
+			<ul>
+				<li>Derive tests from source code</li>
+				<li>Branches, conditions, statements, ...</li>
+			</ul>
+		</li>
 	</ul>
 </section>
 
@@ -247,9 +267,11 @@
 		<li class="fragment fade-up">Input space coverage</li>
 		<li class="fragment fade-up">Control-flow graph coverage</li>
 		<li class="fragment fade-up">Logic coverage</li>
-		<li class="fragment fade-up">Mutation coverage</li>
-		<li class="fragment fade-up">Sometimes required by standard</li>
-		<li class="fragment fade-up">E.g. DO-178C (avionics) requires some level of MC/DC coverage for level A certification</li>
+		<li class="fragment fade-up">In embedded software, often required by standard
+			<ul>
+				<li>E.g. DO-178C (avionics) requires some level of MC/DC coverage for level A certification</li>
+			</ul>
+		</li>
 	</ul>
 </section>
 
@@ -279,13 +301,33 @@
 </section>
 
 <section>
+	<h3>Input space partitioning approaches</h3>
+	<ul>
+		<li class="fragment fade-up">Interface-based
+			<ul>
+				<li>Use characteristics of datatypes</li>
+				<li>E.g., for integers: zero, positive, negative, max/min, etc.</li>
+			</ul>
+		</li>
+		<li class="fragment fade-up">Functionality-based
+			<ul>
+				<li>Use characteristics of intended program functionality</li>
+				<li>E.g., different expected program outputs</li>
+			</ul>
+		</li>
+	</ul>
+</section>
+
+<!-- Exercise: triangle problem-->
+
+<section>
 	<h1>Structural coverage</h1>
 </section>
 
 <section>
 	<section>
 		<h3>Control-flow graph (CFG)</h3>
-		
+		<li>Graphical representation of code</li>
 		<pre class="C"><code data-trim data-noescape data-line-numbers="">
 			int f(int a, int b) {
 				int z = 0;
@@ -522,15 +564,16 @@
 <section>
 	<h3>Common notions in CFGs</h3>
 	<ul>
-		<li class="fragment fade-up"><emph>Execution path</emph></li>
-		<ul>
-			<li class="fragment fade-up">Path through CFG that starts at entry point</li>
-			<li class="fragment fade-up">Exits either at (one of) the exit point(s)</li>
-			<li class="fragment fade-up">Or is infinite</li>
-		</ul>
+		<li class="fragment fade-up"><emph>Execution path</emph>
+			<ul>
+				<li>Path through CFG that starts at entry point</li>
+				<li>Exits either at (one of) the exit point(s)</li>
+				<li>Or is infinite</li>
+			</ul>
+		</li>
 		<li class="fragment fade-up"><emph>Path condition</emph></li>
 		<ul>
-			<li class="fragment fade-up">Condition for an execution path p within code c such that c executes p if path condition holds</li>
+			<li class="fragment fade-up">Condition for an execution path $p$ within code $c$ such that $c$ executes $p$ if path condition holds</li>
 		</ul>
 		<li class="fragment fade-up"><emph>Feasible execution path</emph></li>
 		<ul>
@@ -542,9 +585,9 @@
 <section>
 	<h3>Statement coverage</h3>
 	<ul>
-		<li class="fragment fade-up">A test suite achieves <emph>statement coverage</emph> if throughout the execution of all tests every node in the CFG is executed at least once</li>
+		<li class="fragment fade-up">A test suite achieves <emph>statement coverage</emph> if after executing all tests every node in the CFG is executed at least once</li>
 		<li class="fragment fade-up">Often quantified: e.g. 80% statement coverage</li>
-		<li class="fragment fade-up">Can this always be achieved?</li>
+		<li class="fragment fade-up">Can this always be achieved?</li> 
 	</ul>
 </section>
 
@@ -567,18 +610,20 @@
 	<h3>Branch coverage</h3>
 
 	<ul>
-		<li class="fragment fade-up">A test suite achieves <emph>branch coverage</emph> if throughout the execution of all tests every edge in the CFG is taken at least once</li>
+		<li class="fragment fade-up">A test suite achieves <emph>branch coverage</emph> if after executing all tests every edge in the CFG is taken at least once</li>
 		<li class="fragment fade-up">Branch coverage subsumes statement coverage</li>
 		<ul>
-			<li class="fragment fade-up">If a test suite achieves BC it automatically also achieves SC</li>
+			<li class="fragment fade-up">If a test suite achieves BC it also achieves SC</li>
 		</ul>
 	</ul>
 </section>
 
+<!--Exercise: test suite 100% statement coverage and branch coverage -->
+
 <section>
 	<h3>Path coverage</h3>
 	<ul>
-		<li class="fragment fade-up">A test suite achieves <emph>path coverage</emph> if throughout the execution of all tests each possible path in the CFG is executed at least once</li>
+		<li class="fragment fade-up">A test suite achieves <emph>path coverage</emph> if after executing all tests each possible path in the CFG is executed at least once</li>
 		<li class="fragment fade-up">Path coverage subsumes branch coverage</li>
 		<li class="fragment fade-up">Path coverage cannot be achieved in practice</li>
 		<ul>
@@ -592,13 +637,13 @@
 <section>
 	<h3>Decision coverage</h3>
 	<ul>
-		<li class="fragment fade-up"><emph>Decision</emph> $D(p)$ in a program p</li>
+		<li class="fragment fade-up"><emph>Decision</emph> $D(p)$ in a program $p$</li>
 		<ul>
 			<li class="fragment fade-up">Set of <emph>maximum</emph> boolean expressions in p</li>
 		</ul>
 		<li class="fragment fade-up">E.g. conditions of if, while, ...</li>
 		<li class="fragment fade-up">But also statements like $A = (B \land (x \geq 0))$</li>
-		<li class="fragment fade-up">Maximum in the sense that $(B \land (x \geq 0))$ is a decision, $B$ and $(x \geq 0)$ are not</li>
+		<li class="fragment fade-up">Maximum in the sense that $(B \land (x \geq 0))$ is a decision, atoms $B$ and $(x \geq 0)$ are not</li>
 	</ul>
 </section>
 
@@ -619,7 +664,7 @@
 <section>
 	<h3>Decision coverage</h3>
 	<ul>
-		<li class="fragment fade-up">For a given decision $d$ <emph>decision coverage</emph> is satisfied if it contains at least one test where d evaluates to true and one where d evaluates to false</li>
+		<li class="fragment fade-up">For a given decision $d$ <emph>decision coverage</emph> is satisfied if it contains at least one test where $d$ evaluates to true and one where $d$ evaluates to false</li>
 		<li class="fragment fade-up">A test suite achieves decision coverage for a program $p$ if it achieves decision coverage for every decision $d$ in $D(p)$</li>
 	</ul>
 </section>
@@ -642,7 +687,7 @@
 <section>
 	<h3>Condition coverage</h3>
 	<ul>
-		<li class="fragment fade-up"><emph>Conditions</emph> $C(p)$ of a program $p$ are the set of atomic boolean expressions in $p$</li>
+		<li class="fragment fade-up"><emph>Conditions</emph> $C(p)$ of a program $p$ are the set of <i>atomic</i> boolean expressions in $p$</li>
 		<li class="fragment fade-up">E.g. in the decision $((a < b) \lor D) \land (m \geq n * o)$ the conditions are $(a < b)$, $D$, and $(m \geq n * o)$</li>
 		<li class="fragment fade-up">A test suite achieves <emph>condition coverage</emph> if each condition $c$ in program $p$ evaluates at least once to true and once to false</li>
 	</ul>
@@ -658,6 +703,22 @@
 	</ul>
 </section>
 
+
+<section>
+	<h3>Example - MC/DC</h3>
+	<ul>
+		<li>int a, b, m, n, o</li>
+		<li>bool D</li>
+		<li> $((a < b) \lor D) \land (m \geq n * o)$ </li>
+		<li>Inputs to achieve MC/DC for $(a < b)$?</li>
+		<li class="fragment fade-up">Need 2 tests:</li>
+		<ul>
+			<li class="fragment fade-up">(a = 5, b = 10, D = false, m = 1, n = 1, o = 1)</li>
+			<li class="fragment fade-up">(a = 10, b = 5, D = false, m = 8, n = 1, o = 1)</li>
+		</ul>
+	</ul>
+</section>
+
 <section>
 	<h1>Regression testing</h1>
 </section>
@@ -666,7 +727,7 @@
 	<h3>Regression testing</h3>
 	<ul>
 		<li class="fragment fade-up">Adding new features in a program or fixing a bug might introduce new bugs</li>
-		<li class="fragment fade-up"><emph>Regressions</emph> as "collateral damage"</li>
+		<li class="fragment fade-up"><emph>Regressions</emph> are "collateral damage" of our changes</li>
 		<li class="fragment fade-up">Regression testing is about preventing regressions</li>
 		<li class="fragment fade-up">Regression tests should be run after every change to the program</li>
 	</ul>
@@ -678,9 +739,10 @@
 		<li class="fragment fade-up">Gain confidence that modification does not cause new bugs</li>
 		<li class="fragment fade-up">When do we write regression tests?</li>
 		<ul>
-			<li class="fragment fade-up">After adding a new feature</li>
-			<li class="fragment fade-up">After fixing a bug</li>
+			<li class="fragment fade-up">After adding a new feature to check it works correctly</li>
+			<li class="fragment fade-up">After fixing a bug to check bug does not occur</li>
 		</ul>
+		<li class="fragment fade-up">Tests are collected over time</li>
 		<li class="fragment fade-up">For bigger projects automated regression testing tools are recommended</li>
 		<li class="fragment fade-up">Related: <emph>Continuous integration</emph></li>
 	</ul>
