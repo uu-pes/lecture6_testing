@@ -1,7 +1,7 @@
-# 1DT106 Lecture 8: Testing
+# 1DT106 Lecture 6: Testing
 
 This repository holds the slides for the eighth lecture in 1DT106 Programming
-Embedded Systems at Uppsala University. 
+Embedded Systems at Uppsala University, 2025 edition. 
 
 ## Required software 
 
