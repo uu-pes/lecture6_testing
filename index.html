@@ -42,6 +42,7 @@
 		<li>Categories of testing</li>
 		<li>Unit Testing</li>
 		<li>Coverage</li>
+		<li>Regression Testing</li>
 		<li>System-level testing</li>
 	</ul>
 </section>
@@ -53,7 +54,7 @@
 		<li class="fragment fade-up">Testing is a form of <emph>dynamic V&V</emph></li>
 		<li class="fragment fade-up">Other alternatives exist</li>
 		<ul>
-			<li class="fragment fade-up"><emph>Static V&V</emph> (next lecture)</li>
+			<li class="fragment fade-up"><emph>Static V&V</emph> (verification lecture)</li>
 			<li class="fragment fade-up">Code inspection and reviews</li>
 		</ul>
 	</ul>
@@ -219,7 +220,7 @@
 	<h3>Oracles</h3>
 	<ul>
 		<li class="fragment fade-up">Often independent of particular test case</li>
-		<li class="fragment fade-up">Sometimes derivable (mechanically) from unit specifiction</li>
+		<li class="fragment fade-up">Sometimes derivable (mechanically) from unit specification</li>
 		<li class="fragment fade-up">Oracle is essential for automation</li>
 		<li class="fragment fade-up">Often in practice:</li>
 		<ul>
@@ -232,8 +233,15 @@
 	<h3>Test automation</h3>
 	<ul>
 		<li class="fragment fade-up">By using a tool we can run large collection of tests automatically</li>
-		<li class="fragment fade-up">Testing code sometimes integrated into actual code (documentation)</li>
-		<li class="fragment fade-up">Whenever we extend code we can rerun test suite (=> regression testing)</li>
+		<!-- <li class="fragment fade-up">Testing code sometimes integrated into actual code (documentation)</li>-->
+		<li class="fragment fade-up">We can rerun test suite
+			<ul>
+				<li>Whenever we extend code (=> regression testing)
+				</li>
+				<li>After fixing bugs</li>
+			</ul> 
+		</li>
+
 	</ul>
 </section>
 
@@ -267,8 +275,7 @@
 	<ul>
 		<li class="fragment fade-up">Usually derive test suite to achieve certain notion of <emph>coverage</emph></li>
 		<li class="fragment fade-up">Input space coverage</li>
-		<li class="fragment fade-up">Control-flow graph coverage</li>
-		<li class="fragment fade-up">Logic coverage</li>
+		<li class="fragment fade-up">Structural coverage</li>
 		<li class="fragment fade-up">In embedded software, often required by standard
 			<ul>
 				<li>E.g. DO-178C (avionics) requires some level of MC/DC coverage for level A certification</li>
