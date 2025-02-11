@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Lecture 8</title>
+		<title>Lecture 6</title>
 
 		<link rel="shortcut icon" type="image/x-icon" href="uu_logo/UU_logo_color-cropped.ico">
 
@@ -25,8 +25,10 @@
 
 <!-- BEGIN SLIDES -->
 <section data-background-image="images/background.jpg" data-background-opacity="0.2">
-	<h1>Lecture 8</h1>
-	<p>Nikolaus Huber</p>
+	<h1>Lecture 6</h1>
+	<p>Paul Fiterau</p>
+	<br/>
+	<footer>Based on slides by Nikolaus Huber</footer>
 </section>
 
 <section data-background-image="images/testing.jpg" data-background-opacity="0.2">
@@ -219,7 +221,7 @@
 		<li class="fragment fade-up">Often independent of particular test case</li>
 		<li class="fragment fade-up">Sometimes derivable (mechanically) from unit specifiction</li>
 		<li class="fragment fade-up">Oracle is essential for automation</li>
-		<li class="fragment fade-up">Quite often in practice:</li>
+		<li class="fragment fade-up">Often in practice:</li>
 		<ul>
 			<li class="fragment fade-up">Oracle just compares unit outputs with desired (expected) outputs</li>
 		</ul>
@@ -246,15 +248,15 @@
 	<ul>
 		<li class="fragment fade-up"><emph>Black box</emph> (specification-based) testing
 			<ul>
-				<li>Derive tests from external descriptions</li>
-				<li>Without knowledge of concrete implementation</li>
-				<li>Specifications, requirements, signatures, ...</li>
+				<li class="fragment fade-up">Derive tests from external descriptions</li>
+				<li class="fragment fade-up">Specifications, requirements, signatures, ...</li>
+				<li class="fragment fade-up">Without knowledge of concrete implementation</li>
 			</ul>
 		</li>
 		<li class="fragment fade-up"><emph>White box</emph> (implementation-based) testing
 			<ul>
-				<li>Derive tests from source code</li>
-				<li>Branches, conditions, statements, ...</li>
+				<li class="fragment fade-up">Derive tests from source code</li>
+				<li class="fragment fade-up">Branches, conditions, statements, ...</li>
 			</ul>
 		</li>
 	</ul>
@@ -290,12 +292,6 @@
 	<ul>
 		<li class="fragment fade-up">Partition input domain into <emph>regions</emph></li>
 		<li class="fragment fade-up">Equivalence classes of values in domain w.r.t. some characteristic</li>
-		<li class="fragment fade-up">Example integer inputs</li>
-		<ul>
-			<li class="fragment fade-up">Negative</li>
-			<li class="fragment fade-up">Positive</li>
-			<li class="fragment fade-up">Zero</li>
-		</ul>
 		<li class="fragment fade-up"><emph>Coverage criterion</emph>: has each region been covered by test cases?</li>
 	</ul>
 </section>
@@ -318,6 +314,23 @@
 	</ul>
 </section>
 
+<section>
+	<h3>Exercise</h3>
+	<p>Choose inputs to test determineType</p>
+	<pre class="C"><code data-trim data-noescape data-line-numbers="">
+		typedef enum { Scalene,
+			Isosceles,
+			Equilateral,
+			Invalid } TriType;
+
+		TriType determineType(int length1,
+				   int length2,
+				   int length3) {…}
+				</code>
+	</pre>
+	<img class="r-stretch" src="images/triangle.png"></img>
+</section>
+
 <!-- Exercise: triangle problem-->
 
 <section>
@@ -327,7 +340,6 @@
 <section>
 	<section>
 		<h3>Control-flow graph (CFG)</h3>
-		<li>Graphical representation of code</li>
 		<pre class="C"><code data-trim data-noescape data-line-numbers="">
 			int f(int a, int b) {
 				int z = 0;
@@ -564,6 +576,7 @@
 <section>
 	<h3>Common notions in CFGs</h3>
 	<ul>
+		<li class="fragment fade-up">Components: nodes, edges which can contain guards</li>
 		<li class="fragment fade-up"><emph>Execution path</emph>
 			<ul>
 				<li>Path through CFG that starts at entry point</li>
@@ -720,6 +733,16 @@
 </section>
 
 <section>
+	<h3>Exercise</h3>
+	<p>Do any of the logical coverage criteria subsume each other?</p>
+	<ul>
+		<li>Decision coverage</li>
+		<li>Condition coverage</li>
+		<li>MC/DC</li>
+	</ul>
+</section>
+
+<section>
 	<h1>Regression testing</h1>
 </section>
 
@@ -752,13 +775,25 @@
 	<h3>Testing embedded systems</h3>
 	<ul>
 		<li class="fragment fade-up">ES often <emph>reactive</emph>, need <emph>stream</emph> of test inputs</li>
-		<li class="fragment fade-up">Realistic environment needed (or simulated)</li>
-		<li class="fragment fade-up">Important setup for embedded systems: <emph>Hardware-in-the-loop testing</emph></li>
+		<li class="fragment fade-up">Realistic environment needed
+			<ul>
+				<li class="fragment fade-up">Either actual environment (later stage)</li>
+				<li class="fragment fade-up">Or simulation of environment (cheaper, faster)</li>
+			</ul>
+		</li>
+		<li class="fragment fade-up">Common setup: hardware-in-the-loop</li>
+	</ul>
+</section>
+<section>
+	<h3>Hardware-in-the-loop testing</h3>
+	<img class="r-stretch" src="images/hil.webp">
+	<ul>
+		<li class="fragment fade-up">Simulation often developed in high-level languages like Simulink, Modelica (covered in course 1DT059 Model-Based Design of Embedded Software) </li>
 		<li class="fragment fade-up">Common problems</li>
 		<ul>
 			<li class="fragment fade-up">Simulation of environment is difficult</li>
 			<li class="fragment fade-up">What if simulation is too simplistic / not realistic?</li>
-			<li class="fragment fade-up">Often developed in high-level languages like Simulink, Modelica</li>
+			
 		</ul>
 	</ul>
 </section>
